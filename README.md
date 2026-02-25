@@ -1,0 +1,1 @@
+# duygusal-sozler
