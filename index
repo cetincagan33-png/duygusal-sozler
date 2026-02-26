@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Duygusal Sözler</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        overflow: hidden;
+        font-family: 'Segoe UI', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        flex-direction: column;
+        position: relative;
+    }
+
+    /* ÜST YAZI KUTUSU */
+    .top-text-box {
+        position: absolute;
+        top: 30px;
+        background: rgba(0,0,0,0.3);
+        padding: 15px 30px;
+        border-radius: 25px;
+        z-index: 3;
+        text-align: center;
+    }
+
+    /* ÜST YAZI */
+    .top-text {
+        font-size: 42px;
+        font-weight: 800;
+        color: #fff;
+        text-shadow: 0 0 10px #fff, 0 0 20px #ff69b4, 0 0 30px #ff1493;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+
+    .text-box {
+        background: rgba(255, 255, 255, 0.15);
+        padding: 50px;
+        border-radius: 25px;
+        backdrop-filter: blur(12px);
+        text-align: center;
+        width: 85%;
+        max-width: 900px;
+        margin-bottom: 30px;
+        z-index: 2;
+    }
+
+    h1 {
+        font-size: 56px;
+        font-weight: 600;
+        color: white;
+        text-shadow: 0 0 15px rgba(255,255,255,0.7);
+        min-height: 120px;
+        line-height: 1.3;
+    }
+
+    button {
+        padding: 15px 35px;
+        font-size: 18px;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        background: white;
+        color: #764ba2;
+        font-weight: bold;
+        transition: 0.3s;
+        z-index: 2;
+    }
+
+    button:hover { transform: scale(1.08); }
+
+    .heart {
+        position: absolute;
+        bottom: -30px;
+        font-size: 35px;
+        opacity: 0.9;
+        z-index: 1;
+        animation: floatUp linear forwards;
+    }
+
+    @keyframes floatUp {
+        0% { transform: translateY(0) translateX(0); opacity: 1; }
+        50% { transform: translateY(-50vh) translateX(20px); }
+        100% { transform: translateY(-110vh) translateX(-20px); opacity: 0; }
+    }
+
+    .star {
+        position: absolute;
+        color: white;
+        font-size: 14px;
+        animation: twinkle 2s infinite alternate;
+        opacity: 0.8;
+        z-index: 0;
+    }
+
+    @keyframes twinkle { from { opacity: 0.3; } to { opacity: 1; } }
+
+    .end { font-size: 24px; color: white; margin-top: 15px; opacity: 0.8; }
+</style>
+</head>
+<body>
+
+<!-- ÜST YAZI KUTUSU -->
+<div class="top-text-box">
+    <div class="top-text" id="topText">Tek sevdiğim kişi: Eylül 💖</div>
+</div>
+
+<div class="text-box">
+    <h1 id="text"></h1>
+    <div id="endMessage" class="end"></div>
+</div>
+
+<button id="nextBtn" onclick="showNext()">Bir Sonraki Söz</button>
+
+<script>
+const messages = [
+    "Bazı insanlar vardır, geldiği an hayat değişir…",
+    "Seninle birlikte içimde başka bir dünya büyüyor.",
+    "Sessizliğimde bile sen varsın.",
+    "Kalbim adını her atışında biraz daha fısıldıyor.",
+    "Varlığın, en karanlık günümü bile aydınlatıyor."
+];
+
+let index = 0;
+let isTyping = false;
+const textElement = document.getElementById("text");
+const endMessage = document.getElementById("endMessage");
+const nextBtn = document.getElementById("nextBtn");
+const topText = document.getElementById("topText");
+
+function typeEffect(message, i = 0) {
+    if (i < message.length) {
+        textElement.innerHTML += message.charAt(i);
+        setTimeout(() => typeEffect(message, i + 1), 55);
+    } else {
+        isTyping = false;
+        if (index === messages.length) {
+            endMessage.innerHTML = "— Bitti —";
+            nextBtn.style.display = "none";
+        }
+    }
+}
+
+function showNext() {
+    if (isTyping || index >= messages.length) return;
+    isTyping = true;
+    textElement.innerHTML = "";
+    typeEffect(messages[index]);
+    index++;
+}
+
+showNext();
+
+/* Kalp üretimi ve üst yazıyı senkronize animasyonla */
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "💖";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = (Math.random() * 25 + 30) + "px";
+    heart.style.animationDuration = (Math.random() * 2 + 3) + "s";
+    document.body.appendChild(heart);
+
+    // Üst yazı senkron: büyü + renk değişimi
+    topText.style.transform = "scale(1.08)";
+    topText.style.color = "#" + Math.floor(Math.random()*16777215).toString(16);
+    topText.style.textShadow = `0 0 15px ${topText.style.color}, 0 0 30px #ff69b4, 0 0 40px #ff1493`;
+    setTimeout(() => {
+        topText.style.transform = "scale(1)";
+        topText.style.color = "#fff";
+        topText.style.textShadow = "0 0 10px #fff, 0 0 20px #ff69b4, 0 0 30px #ff1493";
+    }, 300);
+
+    setTimeout(() => heart.remove(), 6000);
+}
+
+setInterval(createHeart, 250);
+
+/* Yıldızlar */
+function createStar() {
+    const star = document.createElement("div");
+    star.classList.add("star");
+    star.innerHTML = "✦";
+    star.style.left = Math.random() * 100 + "vw";
+    star.style.top = Math.random() * 100 + "vh";
+    document.body.appendChild(star);
+}
+
+for (let i = 0; i < 60; i++) { createStar(); }
+</script>
+
+</body>
+</html>
